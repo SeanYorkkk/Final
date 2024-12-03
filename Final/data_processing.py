@@ -31,16 +31,19 @@ def calculate_volatility(prices):
 def predict_investment(prices, trend_threshold=0.01, volatility_threshold=0.02):
     """
     Predict whether the stock will grow or crash, and if it's a good investment.
-    Returns a string recommendation.
+    Returns a string recommendation based on trend and volatility.
     """
-    slope = calculate_trend(prices)
-    volatility = calculate_volatility(prices)
+    slope = calculate_trend(prices)  # Trend of prices
+    volatility = calculate_volatility(prices)  # Risk level based on price fluctuations
 
+    # Evaluate based on slope and volatility
     if slope > trend_threshold and volatility < volatility_threshold:
         return "The stock is likely to grow and is a low-risk investment."
-    elif slope > trend_threshold:
+    elif slope > trend_threshold and volatility >= volatility_threshold:
         return "The stock is likely to grow but has higher risk due to volatility."
     elif slope < -trend_threshold:
         return "The stock is likely to decline. Not a good investment."
+    elif abs(slope) <= trend_threshold and volatility < volatility_threshold:
+        return "The stock is stable and low-risk, but lacks strong growth potential."
     else:
-        return "The stock is stable but lacks strong growth potential."
+        return "The stock is stable but has higher risk due to volatility."

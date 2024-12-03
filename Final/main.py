@@ -1,12 +1,7 @@
 import schedule
 import time
-from data_processing import (
-    calculate_moving_average,
-    highest_price,
-    calculate_trend,
-    calculate_volatility,
-    predict_investment,
-)
+from data_processing import  calculate_moving_average, highest_price, calculate_trend, calculate_volatility, predict_investment
+
 from file_operations import load_from_file, save_to_file, fetch_live_stock_data
 
 
@@ -23,7 +18,7 @@ def main():
     print("Welcome to the Stock Analysis Program!")
     stock_data = {}
     filename = "stocks.csv"
-    tickers = ["AAPL", "MSFT", "GOOG"]  # Default tickers for automation
+    tickers = ["AAPL", "MSFT", "GOOG","DOGE-USD","SMCI"]  # Default tickers for automation
 
     while True:
         print("\nOptions:")
@@ -77,17 +72,18 @@ def main():
                     print(f"Ticker {ticker} not found in loaded data.")
 
         elif choice == "4":
-            # Save stock data to a file
+            # Save raw stock data to a file
             if not stock_data:
                 print("No stock data to save. Please load or analyze data first.")
             else:
-                save_to_file(stock_data, filename)
-                print(f"Data saved to {filename}.")
+                save_to_file(stock_data, "analysis.csv")
+                print("Raw stock data saved to analysis.csv.")
+
 
         elif choice == "5":
             # Update stock data with live prices
             tickers = input(
-                "Enter tickers (comma-separated, e.g., AAPL,MSFT,GOOG): "
+                "Enter tickers (comma-separated, e.g., AAPL,MSFT,GOOG,DOGE-USD,SMCI): "
             ).strip().upper().split(",")
             fetch_live_stock_data(tickers, filename)
 
