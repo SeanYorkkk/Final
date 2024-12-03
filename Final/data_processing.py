@@ -1,12 +1,46 @@
+import numpy as np
+from scipy.stats import linregress
+
+
 def calculate_moving_average(prices, window_size):
+    """Calculate moving averages for the given prices."""
     if len(prices) < window_size:
         return []
     return [sum(prices[i:i+window_size]) / window_size for i in range(len(prices) - window_size + 1)]
 
+
 def highest_price(prices):
+    """Find the highest price in the list."""
     return max(prices)
 
 
-def lowest_price(prices):
-    """Find the lowest price in the list."""
-    return min(prices)
+def calculate_trend(prices):
+    """Calculate the trend of stock prices using linear regression."""
+    x = np.arange(len(prices))  # Time as an independent variable
+    slope, _, _, _, _ = linregress(x, prices)
+    return slope
+
+
+def calculate_volatility(prices):
+    """Calculate the volatility (standard deviation) of daily returns."""
+    returns = np.diff(prices) / prices[:-1]  # Daily returns
+    volatility = np.std(returns)  # Standard deviation of returns
+    return volatility
+
+
+def predict_investment(prices, trend_threshold=0.01, volatility_threshold=0.02):
+    """
+    Predict whether the stock will grow or crash, and if it's a good investment.
+    Returns a string recommendation.
+    """
+    slope = calculate_trend(prices)
+    volatility = calculate_volatility(prices)
+
+    if slope > trend_threshold and volatility < volatility_threshold:
+        return "The stock is likely to grow and is a low-risk investment."
+    elif slope > trend_threshold:
+        return "The stock is likely to grow but has higher risk due to volatility."
+    elif slope < -trend_threshold:
+        return "The stock is likely to decline. Not a good investment."
+    else:
+        return "The stock is stable but lacks strong growth potential."
