@@ -1,5 +1,20 @@
 import csv
 import yfinance as yf
+from yahoo_fin import stock_info as si
+
+def get_biggest_gainers():
+    """
+    Fetch the biggest stock gainers from Yahoo Finance.
+    returns a list of dictionaries containing the biggest gainers with their details.
+    """
+    try:
+        gainers = si.get_day_gainers()  # Fetch top gainers
+        gainers_list = gainers[["Symbol", "Name", "Price (Intraday)", "% Change"]].to_dict("records")
+        return gainers_list
+    except Exception as e:
+        print(f"Error fetching biggest gainers: {e}")
+        return []
+
 
 
 def load_from_file(filename):
@@ -52,6 +67,10 @@ def fetch_live_stock_data(tickers, filename):
             stock_data[ticker] = prices[-10:]  # Keep the last 10 prices
         except Exception as e:
             print(f"Error fetching data for {ticker}: {e}")
+        
+    
+        
+    
 
     # Write updated stock data to the CSV file
     with open(filename, "w", newline="") as file:

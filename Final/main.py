@@ -2,7 +2,7 @@ import schedule
 import time
 from data_processing import  calculate_moving_average, highest_price, calculate_trend, calculate_volatility, predict_investment
 
-from file_operations import load_from_file, save_to_file, fetch_live_stock_data
+from file_operations import load_from_file, save_to_file, fetch_live_stock_data, get_biggest_gainers
 
 
 def update_data_automatically(filename, tickers):
@@ -28,7 +28,8 @@ def main():
         print("4. Save analysis to a file")
         print("5. Update stock data with live prices")
         print("6. Enable automatic updates (every 1 hour)")
-        print("7. Exit")
+        print("7. Fetch the biggest stock gainers from Yahoo Finance")
+        print("8. Exit")
 
         choice = input("Enter your choice: ").strip()
 
@@ -45,9 +46,7 @@ def main():
             if not stock_data:
                 print("No stock data loaded. Please load data first.")
             else:
-                ticker = input(
-                    f"Enter the ticker to analyze (available: {', '.join(stock_data.keys())}): "
-                ).strip().upper()
+                ticker = input(f"Enter the ticker to analyze (available: {', '.join(stock_data.keys())}): ").strip().upper()
                 if ticker in stock_data:
                     prices = stock_data[ticker]
                     ma = calculate_moving_average(prices, window_size=3)
@@ -100,12 +99,20 @@ def main():
                 print("\nAutomatic updates stopped.")
 
         elif choice == "7":
-            print("Exiting the program. Goodbye!")
+            print("Fetching the biggest stock gainers...")
+            gainers = get_biggest_gainers()
+            if gainers:
+                print(f"\n{'Symbol':<10} {'Name':<40} {'Price':<10} {'% Change':<10}")
+                for gainer in gainers[:10]:  # Limit to top 10 for display
+                    print(f"{gainer['Symbol']:<10} {gainer['Name']:<40} {gainer['Price (Intraday)']:<10} {gainer['% Change']:<10}")
+                save_to_file(gainers, "top_gainers.csv")
+                print("Top gainers saved to top_gainers.csv.")
+
+        elif choice == "8":
+            print("Exiting program.")
             break
 
-        else:
-            print("Invalid choice. Please try again.")
-
-
-if __name__ == "__main__":
-    main()
+       
+    if __name__ == "__main__":
+     main()
+    
