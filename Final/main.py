@@ -1,8 +1,7 @@
 import schedule
 import time
 from data_processing import  calculate_moving_average, highest_price, calculate_trend, calculate_volatility, predict_investment
-
-from file_operations import load_from_file, save_to_file, fetch_live_stock_data, get_biggest_gainers
+from file_operations import load_from_file, save_to_file, fetch_live_stock_data
 
 
 def update_data_automatically(filename, tickers):
@@ -18,8 +17,9 @@ def main():
     print("Welcome to the Stock Analysis Program!")
     stock_data = {}
     filename = "stocks.csv"
-    tickers = ["AAPL", "MSFT", "GOOG","DOGE-USD","SMCI"]  # Default tickers for automation
+    tickers = ["AAPL", "MSFT", "GOOG","DOGE-USD","SMCI"]  # Set of tickers to fetch live data
 
+    # Options menu
     while True:
         print("\nOptions:")
         print("1. Load stock data from a file")
@@ -28,8 +28,7 @@ def main():
         print("4. Save analysis to a file")
         print("5. Update stock data with live prices")
         print("6. Enable automatic updates (every 1 hour)")
-        print("7. Fetch the biggest stock gainers from Yahoo Finance")
-        print("8. Exit")
+        print("7. Exit")
 
         choice = input("Enter your choice: ").strip()
 
@@ -99,20 +98,10 @@ def main():
                 print("\nAutomatic updates stopped.")
 
         elif choice == "7":
-            print("Fetching the biggest stock gainers...")
-            gainers = get_biggest_gainers()
-            if gainers:
-                print(f"\n{'Symbol':<10} {'Name':<40} {'Price':<10} {'% Change':<10}")
-                for gainer in gainers[:10]:  # Limit to top 10 for display
-                    print(f"{gainer['Symbol']:<10} {gainer['Name']:<40} {gainer['Price (Intraday)']:<10} {gainer['% Change']:<10}")
-                save_to_file(gainers, "top_gainers.csv")
-                print("Top gainers saved to top_gainers.csv.")
-
-        elif choice == "8":
             print("Exiting program.")
             break
 
        
-    if __name__ == "__main__":
+if __name__ == "__main__":
      main()
     
