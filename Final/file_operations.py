@@ -1,31 +1,6 @@
 import csv
 import yfinance as yf
 
-def fetch_yesterdays_stock_data(tickers):
-    """
-    Fetch yesterday's stock data (Open, High, Low, Close) for given tickers.
-    Returns a dictionary with ticker as the key and a dictionary of prices as the value.
-    """
-    try:
-        yesterday_data = {}
-        for ticker in tickers:
-            stock = yf.Ticker(ticker)
-            history = stock.history(period="2d")  # Fetch the last two days of data
-            if len(history) >= 2:
-                yesterday = history.iloc[-2]  # Get the second to last row (yesterday's data)
-                yesterday_data[ticker] = {
-                    "Open": yesterday["Open"],
-                    "High": yesterday["High"],
-                    "Low": yesterday["Low"],
-                    "Close": yesterday["Close"],
-                }
-            else:
-                print(f"No data available for {ticker}.")
-        return yesterday_data
-    except Exception as e:
-        print(f"Error fetching yesterday's data: {e}")
-        return {}
-
 def load_from_file(filename):
     """
     Load stock data from a CSV file.
